@@ -1,0 +1,19 @@
+[package]
+name = "matchmaker-rs"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+# Library-specifc
+ethers = "2.0.2"
+ethers-flashbots = "0.13.0"
+
+# Serialization/Deserialization
+serde = "1.0.159"
+serde_json = "1.0.95"
+
+# Error handling
+thiserror = "1.0.40"
+
+# HTTP
+url = "2.3.1"
