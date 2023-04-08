@@ -1,6 +1,8 @@
-use ethers::{providers::Middleware, signers::Signer};
+use ethers::{providers::Middleware, signers::Signer, types::Bytes};
 use ethers_flashbots::Relay;
 use url::Url;
+
+use crate::share::ShareTransactionOptions;
 
 #[derive(Debug)]
 pub struct MevShareMiddleware<M, S> {
@@ -36,5 +38,9 @@ impl<M: Middleware, S: Signer> MevShareMiddleware<M, S> {
     /// the `eth_callBundle` remote procedure call.
     pub fn set_simulation_relay(&mut self, relay_url: impl Into<Url>) {
         self.simulation_relay = Some(Relay::new(relay_url, None));
+    }
+
+    pub fn send_share_tx(&self, signed_tx: Bytes, opts: ShareTransactionOptions) {
+        todo!()
     }
 }
