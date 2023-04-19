@@ -1,7 +1,7 @@
 use ethers::types::{Bytes, U256};
 use serde::Serialize;
 
-#[derive(Clone, Eq, PartialEq, Debug, Serialize)]
+#[derive(Default, Clone, Eq, PartialEq, Debug, Serialize)]
 pub struct ShareTransactionOptions {
     pub max_block_number: Option<U256>,
     #[serde(flatten)]
@@ -85,13 +85,31 @@ pub struct InternalFlashbotsPayloadPreferences {
     auction: Option<FlashbotsAuctionPreferences>,
 }
 
+impl From<ShareTransactionOptions> for InternalFlashbotsPayloadPreferences {
+    fn from(opts: ShareTransactionOptions) -> Self {
+        let enable =
+            opts.max_block_number.is_some() || opts.preferences != FlashbotsHints::default();
+
+        Self {
+            fast: true,
+            auction: match enable {
+                true => Some(FlashbotsAuctionPreferences {
+                    enable,
+                    hint: Some(opts.preferences),
+                }),
+                false => None,
+            },
+        }
+    }
+}
+
 #[derive(Debug, Serialize)]
 pub struct FlashbotsAuctionPreferences {
     enable: bool,
     hint: Option<FlashbotsHints>,
 }
 
-#[derive(Clone, Eq, PartialEq, Debug, Serialize)]
+#[derive(Default, Clone, Eq, PartialEq, Debug, Serialize)]
 pub struct FlashbotsHints {
     pub logs: bool,
     pub calldata: bool,
